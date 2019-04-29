@@ -5,8 +5,7 @@ import requests
 from time import sleep
 
 
-raspberryIPLocation = "http://localhost:5000/cmd/"
-# raspberryIPLocation = "http://10.0.10.10:5000/cmd/"
+raspberryIPLocation = "http://10.0.10.10:5000/cmd/"
 
 #This is every defined movement command for the robot, to add new commands you need to simply expand this list and add code for the axis check
 class Move(Enum):
@@ -21,13 +20,19 @@ class Move(Enum):
     DECREASE_SPEED = "{\"c\":13}"
 
 previousMove = Move.STOP
+speed = 10
 
 #This sends commands that it's given to the raspberry pi, and then records it
 def sendCommand(movement = Move.STOP):
-    global raspberryIPLocation, previousMove
+    global raspberryIPLocation, previousMove, speed
     try:
         response = requests.get(raspberryIPLocation + movement.value,timeout=1) 
-        print("Sent message and got response:" + str(response) )
+        print("Sent message:"+movement.value )
+        if movement.value == Move.INCREASE_SPEED:
+            speed += 5;
+        if movement.value == Move.DECREASE_SPEED:
+            speed -= 5;
+
         previousMove = movement
     except:
         print("error sending message:" + movement.value)
@@ -183,8 +188,10 @@ while done==False:
             if hat[1] < -0.5:
                 moveCmd = Move.DECREASE_SPEED
         textPrint.unindent()
-        
+        textPrint.print(screen, "Speed: {}".format(speed) )
+
         textPrint.unindent()
+       
 
     
     # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
