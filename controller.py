@@ -18,6 +18,8 @@ class Move(Enum):
     LOWER_F = "{\"c\":11}"
     INCREASE_SPEED = "{\"c\":12}"
     DECREASE_SPEED = "{\"c\":13}"
+    CONVEYOR_COLLECT = "{\"c\":14}"
+    CONVEYOR_DUMP = "{\"c\":15}"
 
 previousMove = Move.STOP
 speed = 10
@@ -171,6 +173,10 @@ while done==False:
                 moveCmd = Move.RAISE_F
             if i == 5 and button > 0.5:
                 moveCmd = Move.LOWER_F
+            if i == 6 and button > 0.5:
+                moveCmd = Move.CONVEYOR_COLLECT
+            if i == 4 and button > 0.5:
+                moveCmd = Move.CONVEYOR_DUMP
         
         textPrint.unindent()
             
