@@ -20,6 +20,10 @@ class Move(Enum):
     DECREASE_SPEED = "{\"c\":13}"
     CONVEYOR_COLLECT = "{\"c\":14}"
     CONVEYOR_DUMP = "{\"c\":15}"
+    TURN_AUGUR_CLOCKWISE = "{\"c\":16}"
+    TURN_AUGUR_COUNTER_CLOCKWISE = "{\"c\":17}"
+    BALL_SCREW_UP = "{\"c\":18}"
+    BALL_SCREW_DN = "{\"c\":19}"
 
 previousMove = Move.STOP
 speed = 10
@@ -174,8 +178,16 @@ while done==False:
             if i == 5 and button > 0.5:
                 moveCmd = Move.LOWER_F
             if i == 6 and button > 0.5:
-                moveCmd = Move.CONVEYOR_COLLECT
+                moveCmd = Move.BA
             if i == 4 and button > 0.5:
+                moveCmd = Move.CONVEYOR_DUMP
+            if i == 0 and button > 0.5:
+                moveCmd = Move.TURN
+            if i == 1 and button > 0.5:
+                moveCmd = Move.CONVEYOR_DUMP
+            if i == 2 and button > 0.5:
+                moveCmd = Move.CONVEYOR_COLLECT
+            if i == 3 and button > 0.5:
                 moveCmd = Move.CONVEYOR_DUMP
         
         textPrint.unindent()
