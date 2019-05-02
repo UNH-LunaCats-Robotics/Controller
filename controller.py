@@ -129,6 +129,9 @@ while done==False:
     textPrint.print(screen, "Number of joysticks: {}".format(joystick_count) )
     textPrint.indent()
     
+
+    moveCmd = Move.STOP
+
     # For each joystick:
     for i in range(joystick_count):
         joystick = pygame.joystick.Joystick(i)
@@ -147,8 +150,6 @@ while done==False:
         textPrint.print(screen, "Number of axes: {}".format(axes) )
         textPrint.indent()
         
-        moveCmd = Move.STOP
-
         for i in range( axes ):
             axis = joystick.get_axis( i )
             textPrint.print(screen, "Axis {} value: {:>6.3f}".format(i, axis) )
@@ -178,17 +179,17 @@ while done==False:
             if i == 5 and button > 0.5:
                 moveCmd = Move.LOWER_F
             if i == 6 and button > 0.5:
-                moveCmd = Move.BA
+                moveCmd = Move.CONVEYOR_COLLECT
             if i == 4 and button > 0.5:
                 moveCmd = Move.CONVEYOR_DUMP
             if i == 0 and button > 0.5:
-                moveCmd = Move.TURN
+                moveCmd = Move.BALL_SCREW_DN
             if i == 1 and button > 0.5:
-                moveCmd = Move.CONVEYOR_DUMP
+                moveCmd = Move.BALL_SCREW_UP
             if i == 2 and button > 0.5:
-                moveCmd = Move.CONVEYOR_COLLECT
+                moveCmd = Move.TURN_AUGUR_CLOCKWISE
             if i == 3 and button > 0.5:
-                moveCmd = Move.CONVEYOR_DUMP
+                moveCmd = Move.TURN_AUGUR_COUNTER_CLOCKWISE
         
         textPrint.unindent()
             
