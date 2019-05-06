@@ -51,6 +51,7 @@ def checkCommand(movement = Move.STOP):
     global previousMove
     if movement != previousMove:
         sendCommand(movement)
+        print("Sending:"+str(movement))
 
 import pygame
 
