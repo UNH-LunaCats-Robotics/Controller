@@ -104,8 +104,19 @@ pygame.joystick.init()
 # Get ready to print
 textPrint = TextPrint()
 
+moveCmd = Move.STOP
+
+def setMove(newMove):
+    global previousMove,moveCmd
+
+    if newMove != previousMove or moveCmd == Move.STOP:
+        moveCmd = newMove
+
+
 # -------- Main Program Loop -----------
 while done==False:
+    moveCmd = Move.STOP
+
     # EVENT PROCESSING STEP
     for event in pygame.event.get(): # User did something
         if event.type == pygame.QUIT: # If user clicked close
@@ -131,7 +142,6 @@ while done==False:
     textPrint.indent()
     
 
-    moveCmd = Move.STOP
 
     # For each joystick:
     for i in range(joystick_count):
@@ -156,13 +166,13 @@ while done==False:
             textPrint.print(screen, "Axis {} value: {:>6.3f}".format(i, axis) )
 
             if i == 1 and axis < -0.5:
-                moveCmd = Move.FORWARD
+                setMove(Move.FORWARD)
             if i == 1 and axis > 0.5:
-                moveCmd = Move.BACK
+                setMove(Move.BACK)
             if i == 2 and axis > 0.5:
-                moveCmd = Move.LEFT
+                setMove(Move.LEFT)
             if i == 2 and axis < -0.5:
-                moveCmd = Move.RIGHT
+                setMove(Move.RIGHT)
         
         
 
@@ -175,22 +185,23 @@ while done==False:
         for i in range( buttons ):
             button = joystick.get_button( i )
             textPrint.print(screen, "Button {:>2} value: {}".format(i,button) )
+
             if i == 7 and button > 0.5:
-                moveCmd = Move.RAISE_F
+                setMove(Move.RAISE_F)
             if i == 5 and button > 0.5:
-                moveCmd = Move.LOWER_F
+                setMove(Move.LOWER_F)
             if i == 6 and button > 0.5:
-                moveCmd = Move.CONVEYOR_COLLECT
+                setMove(Move.CONVEYOR_COLLECT)
             if i == 4 and button > 0.5:
-                moveCmd = Move.CONVEYOR_DUMP
+                setMove(Move.CONVEYOR_DUMP)
             if i == 0 and button > 0.5:
-                moveCmd = Move.BALL_SCREW_DN
+                setMove(Move.BALL_SCREW_DN)
             if i == 1 and button > 0.5:
-                moveCmd = Move.BALL_SCREW_UP
+                setMove(Move.BALL_SCREW_UP)
             if i == 2 and button > 0.5:
-                moveCmd = Move.TURN_AUGUR_CLOCKWISE
+                setMove(Move.TURN_AUGUR_CLOCKWISE)
             if i == 3 and button > 0.5:
-                moveCmd = Move.TURN_AUGUR_COUNTER_CLOCKWISE
+                setMove(Move.TURN_AUGUR_COUNTER_CLOCKWISE)
         
         textPrint.unindent()
             
@@ -204,9 +215,10 @@ while done==False:
             hat = joystick.get_hat( i )
             textPrint.print(screen, "Hat {} value: {}".format(i, str(hat)) )
             if hat[1] > 0.5:
-                moveCmd = Move.INCREASE_SPEED
+                setMove(Move.INCREASE_SPEED)
             if hat[1] < -0.5:
-                moveCmd = Move.DECREASE_SPEED
+                setMove(Move.DECREASE_SPEED)
+
         textPrint.unindent()
         textPrint.print(screen, "Speed: {}".format(speed) )
 
