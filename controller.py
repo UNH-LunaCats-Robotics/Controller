@@ -25,12 +25,14 @@ class Move(Enum):
     BALL_SCREW_UP = "{\"c\":18}"
     BALL_SCREW_DN = "{\"c\":19}"
 
-previousMove = Move.STOP
+
+dontStop = False
+previousMoves = []
 speed = 10
 
 #This sends commands that it's given to the raspberry pi, and then records it
 def sendCommand(movement = Move.STOP):
-    global raspberryIPLocation, previousMove, speed
+    global raspberryIPLocation, previousMoves, speed
     try:
         response = requests.get(raspberryIPLocation + movement.value,timeout=1) 
         print("Sent message:"+movement.value )
@@ -39,17 +41,27 @@ def sendCommand(movement = Move.STOP):
         if movement.value == Move.DECREASE_SPEED:
             speed -= 5;
 
-        previousMove = movement
+        if movement == Move.STOP:
+            previousMoves = []
+        else:
+            previousMoves.append(movement)
     except:
         print("error sending message:" + movement.value)
-        previousMove = None
+        previousMove = []
         sleep(3)
     
 
 #This checks the commands to send to the raspberry pi to make sure you're not sending one you already sent. if you aren't, it sends the command
 def checkCommand(movement = Move.STOP):
-    global previousMove
-    if movement != previousMove:
+    global previousMoves, dontStop
+
+    if dontStop and movement == Move.STOP:
+        return
+
+    if len(previousMoves) == 0 and movement == Move.STOP:
+        return
+
+    if movement not in previousMoves:
         sendCommand(movement)
         print("Sending:"+str(movement))
 
@@ -107,16 +119,16 @@ textPrint = TextPrint()
 moveCmd = Move.STOP
 
 def setMove(newMove):
-    global previousMove,moveCmd
-
-    if newMove != previousMove or moveCmd == Move.STOP:
+    global previousMoves,moveCmd,dontStop
+    dontStop = True
+    if newMove not in previousMoves:
         moveCmd = newMove
 
 
 # -------- Main Program Loop -----------
 while done==False:
     moveCmd = Move.STOP
-
+    dontStop = False
     # EVENT PROCESSING STEP
     for event in pygame.event.get(): # User did something
         if event.type == pygame.QUIT: # If user clicked close
